@@ -1,0 +1,21 @@
+Package: nmfbin
+Title: Non-negative Matrix Factorization for Binary Data
+Version: 0.1.0
+Authors@R: c(person(given = "Michal",
+             family = "Ovadek",
+             role = c("aut", "cre", "cph"),
+             email = "michal.ovadek@gmail.com",
+             comment = c(ORCID = "0000-0002-2552-2580")))
+Description: What the package does (one paragraph).
+License: MIT + file LICENSE
+Encoding: UTF-8
+Language: en-GB
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
+URL: https://michalovadek.github.io/nmfbin/
+Suggests: 
+    knitr,
+    rmarkdown,
+    testthat (>= 3.0.0)
+VignetteBuilder: knitr
+Config/testthat/edition: 3

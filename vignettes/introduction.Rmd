@@ -1,0 +1,36 @@
+---
+title: "Basic usage"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{introduction}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+The main function `nmfbin()` operates on matrices like so:
+
+```{r setup}
+library(nmfbin)
+
+# Create a binary matrix for demonstration
+V <- matrix(sample(c(0, 1), 100, replace=TRUE), ncol=10)
+
+# Perform NMF
+results <- nmfbin(V, k=3, divergence="kl", compute_marginal_divergences=TRUE, init_method="random")
+```
+
+The results include divergence measures:
+
+```{r measures}
+
+print(results$final_divergence)
+print(results$divergence_reductions)
+
+```
