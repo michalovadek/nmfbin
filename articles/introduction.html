@@ -79,17 +79,15 @@ so:</p>
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://michalovadek.github.io/nmfbin/">nmfbin</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Create a binary matrix for demonstration</span></span>
-<span><span class="va">V</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>, <span class="fl">100</span>, replace<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>, ncol<span class="op">=</span><span class="fl">10</span><span class="op">)</span></span>
+<span><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>, <span class="fl">100</span>, replace<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>, ncol<span class="op">=</span><span class="fl">10</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Perform NMF</span></span>
-<span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmfbin.html">nmfbin</a></span><span class="op">(</span><span class="va">V</span>, k<span class="op">=</span><span class="fl">3</span>, divergence<span class="op">=</span><span class="st">"kl"</span>, compute_marginal_divergences<span class="op">=</span><span class="cn">TRUE</span>, init_method<span class="op">=</span><span class="st">"random"</span><span class="op">)</span></span></code></pre></div>
-<p>The results include divergence measures:</p>
+<span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmfbin.html">nmfbin</a></span><span class="op">(</span><span class="va">X</span>, k<span class="op">=</span><span class="fl">3</span>, optimizer <span class="op">=</span> <span class="st">"mur"</span>, init <span class="op">=</span> <span class="st">"nndsvd"</span><span class="op">)</span></span></code></pre></div>
+<p>The results include the final loss:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">results</span><span class="op">$</span><span class="va">final_divergence</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 58.40086</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">results</span><span class="op">$</span><span class="va">divergence_reductions</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.00412026 0.00412026 0.00412026</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">results</span><span class="op">$</span><span class="va">final_loss</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 0.4402867</span></span></code></pre></div>
   </main>
 </div>
 
