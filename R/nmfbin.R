@@ -1,283 +1,376 @@
-#' Non-negative Matrix Factorization for Binary Data
+#' Logistic Non-negative Matrix Factorization
 #'
-#' @param V A binary matrix (with entries 0 or 1) to factorize.
-#' @param k Number of components.
-#' @param divergence_type Method for divergence calculation. Choices are "kl" for Kullback-Leibler divergence and "crossentropy" for binary cross-entropy.
-#' @param init_method Method for matrix factor initialization. Choices are "svd" for Singular Value Decomposition and "random" for random values.
-#' @param max.iter Maximum number of iterations for the factor update algorithm.
-#' @param tol Tolerance for convergence in the factor update algorithm.
-#' @param learning_rate Learning rate for gradient descent (only used with divergence_type = "crossentropy").
-#' @param compute_marginal_divergences Logical indicating whether to compute the marginal divergences.
-#' @return A list containing the factor matrices W and H, the final divergence, and if compute_marginal_divergences=TRUE, a vector of marginal divergences.
-#' @export
+#' This function performs Logistic Non-negative Matrix Factorization (NMF) on a binary matrix.
+#'
+#' @param X A binary matrix (m x n) to be factorized.
+#' @param k The number of factors or components.
+#' @param optimizer Type of updating algorithm. `update` for NMF multiplicative update rules or `gradient` for gradient descent.
+#' @param init Method for initializing the factorization.
+#' @param max_iter Maximum number of iterations for the gradient descent optimization.
+#' @param tol Convergence tolerance. The optimization stops when the change in loss is less than this value.
+#' @param learning_rate Learning rate (step size) for the gradient descent optimization.
+#' @param verbose Print convergence if `TRUE`.
+#' @param loss_fun Choice of loss function.
+#' @param loss_normalize Normalize loss if `TRUE`.
+#' @param epsilon Constant to avoid log(0).
+#'
+#' @return A list containing:
+#' \itemize{
+#'   \item \code{W}: The basis matrix (m x k).
+#'   \item \code{H}: The coefficient matrix (k x n).
+#'   \item \code{c}: The global threshold.
+#' }
+#'
 #' @examples
-#' # Create a small binary matrix
-#' V <- matrix(c(1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1), nrow = 3)
-#' 
-#' # Perform binary NMF with 2 components using KL divergence and random initialization
-#' result <- nmfbin(V, k = 2, divergence_type = "kl", init_method = "random")
+#' \dontrun{
+#' # Generate a binary matrix of size 100 x 50
+#' set.seed(123)
+#' m <- 100
+#' n <- 50
+#' X <- matrix(sample(c(0, 1), m * n, replace = TRUE), m, n)
 #'
-#' # Print factor matrices
-#' print(result$W)
-#' print(result$H)
-#' 
-#' # Check the final divergence
-#' print(result$final_divergence)
+#' # Set the number of factors
+#' k <- 4
+#'
+#' # Apply the function
+#' result <- nmfbin(X, k)
+#' }
+#'
+#' @export
 
-nmfbin <- function(V, k, divergence_type = "kl", init_method = "random",
-                   max.iter = 100, tol = 1e-5, learning_rate = 0.01, 
-                   compute_marginal_divergences = FALSE) {
+nmfbin <- function(X, k, optimizer = "mur", init = "nndsvd", max_iter = 1000, tol = 1e-6, learning_rate = 0.001,
+                   verbose = FALSE, loss_fun = "logloss", loss_normalize = TRUE, epsilon = 1e-10) {
   
-  # Check if V contains only 0s and 1s
-  if (!all(V %in% c(0, 1))) {
-    stop("The input matrix V must only contain 0s and 1s.")
+  # Check if X contains only 0s and 1s
+  if (!all(X %in% c(0, 1))) {
+    stop("The input matrix X must only contain 0s and 1s.")
   }
   
-  # Check if V contains at least some 1s
-  if (all(V %in% c(0))) {
-    stop("The input matrix V must contain at least some 1s.")
+  # Check if X contains at least some 1s
+  if (all(X %in% c(0))) {
+    stop("The input matrix X must contain at least some 1s.")
   }
   
-  # Input matrix dimensions
-  m <- nrow(V)
-  n <- ncol(V)
+  # matrix dimensions
+  m <- nrow(X)
+  n <- ncol(X)
   
-  # Check if k < ncol(V)
+  # Check if k < ncol(X)
   if (k >= n) {
-    stop("Chosen k must be (significantly) smaller than ncol(V).")
+    stop("Chosen k must be smaller than ncol(X).")
   }
   
-  # Choice of init_method
-  if (init_method == "svd") {
+  # Initialize W, H, and threshold c
+  init_vals <- initial_values(X, k, m, n, method = init)
+  
+  W = init_vals$W
+  H = init_vals$H
+  c = init_vals$c
+  
+  # SGD does not require initial X_hat
+  if (optimizer == "sgd"){
     
-    # Use SVD for initialization
-    svd_decomp <- svd(V)
-    W <- svd_decomp$u[, 1:k] * sqrt(svd_decomp$d[1:k])
-    H <- t(t(svd_decomp$v[, 1:k]) * sqrt(svd_decomp$d[1:k]))
+    # placeholder value
+    X_hat <- 0
     
-  } else if (init_method == "random") {
+  } else {
     
-    # Random initialization
+    # Compose into initial X_hat
+    X_hat <- recombine_matrix(W, H, c) 
+    
+  }
+  
+  # previous loss
+  prev_loss <- Inf
+  
+  # record convergence
+  convergence <- NA
+  
+  # iterate
+  for (iter in 1:max_iter) {
+    
+    # update W, H, c
+    updated <- update_step(X, W, H, c, X_hat, m, n, type = optimizer, max_iter = max_iter, tol = tol, learning_rate = learning_rate, epsilon = epsilon)
+    
+    W = updated$W
+    H = updated$H
+    c = updated$c
+    
+    # Compose into new X_hat
+    X_hat <- recombine_matrix(W, H, c)
+    
+    # compute loss
+    loss <- loss_function(X_true = X, X_hat = X_hat, type = loss_fun, normalize = loss_normalize, epsilon = epsilon)
+    
+    # record loss
+    convergence[iter] <- loss
+    
+    # Print loss and change
+    if (verbose == TRUE){
+      
+      cat(sprintf("Iteration %d | Divergence from source matrix (log loss) = %f | Change from previous iteration = %f \n", iter, loss, loss - prev_loss)) 
+      
+    }
+    
+    # Check for convergence
+    if (abs(prev_loss - loss) < tol) {
+      break
+    }
+    
+    prev_loss <- loss
+    
+  }
+  
+  # return
+  return(list(W = updated$W, H = updated$H, c = updated$c, convergence = convergence, final_loss = loss))
+  
+}
+
+#' Recombine factors into sigmoidal matrix
+#' 
+#' @noRd
+#' 
+
+recombine_matrix <- function(W, H, c){
+  
+  # matrix multiplication with constant added
+  WHc <- W %*% H + c
+  
+  # sigmoid transformation
+  X_hat <- 1 / (1 + exp(-WHc))
+  
+  # return
+  return(X_hat)
+  
+}
+
+#' Loss functions
+#' 
+#' @noRd
+#' 
+
+loss_function <- function(X_true, X_hat, type = "logloss", normalize = TRUE, epsilon = 1e-10){
+  
+  # dimensions for normalization
+  m <- nrow(X_true)
+  n <- ncol(X_true)
+  
+  # log likelihood loss function, also known as binary cross-entropy loss
+  if (type == "logloss"){
+    
+    # epsilon is added to avoid log(0)
+    loss <- -sum(X_true * log(X_hat + epsilon) + (1 - X_true) * log(1 - X_hat + epsilon))
+    
+  }
+  
+  # mean squared error
+  else if (type == "mse"){
+    
+    loss <- sum((X_true - X_hat)^2)
+    
+  }
+  
+  # normalization (to give per element loss)
+  if (normalize == TRUE){
+    
+    loss <- loss / (m * n)
+    
+  }
+  
+  # return
+  return(loss)
+  
+}
+
+#' Optimization
+#' 
+#' @noRd
+#' 
+
+update_step <- function(X_true, W, H, c, X_hat, m, n, type = "mur", max_iter = 1000, tol = 1e-5, learning_rate = 0.001, epsilon = 1e-10){
+  
+  # optimize with NMF multiplicative update rules
+  if (type == "mur"){
+    
+    # Update rules for W, H, and c
+    W <- W * (X_true %*% t(H)) / (X_hat %*% t(H) + epsilon)
+    H <- H * (t(W) %*% X_true) / (t(W) %*% X_hat + epsilon)
+    c <- c * sum(X_true - X_hat) / (m * n)
+    
+  }
+  
+  # optimize with gradient descent
+  else if (type == "gradient"){
+    
+    # Compute the gradients
+    dW <- -(X_true - X_hat) %*% t(H)
+    dH <- -t(W) %*% (X_true - X_hat)
+    dc <- -sum(X_true - X_hat)
+    
+    # Update W, H, and c using gradient descent
+    W <- W - learning_rate * dW
+    H <- H - learning_rate * dH
+    c <- c - learning_rate * dc
+    
+    # Ensure non-negativity by setting negative values to a small positive value
+    W[W < 0] <- epsilon
+    H[H < 0] <- epsilon
+    
+  }
+  
+  # optimize with stochastic gradient descent
+  else if (type == "sgd"){
+    
+    # Randomly select a data point from X
+    i <- sample(1:m, 1)
+    j <- sample(1:n, 1)
+    xij_true <- X_true[i, j]
+    
+    # Compute the current estimate for the selected data point
+    WHc_ij <- sum(W[i,] * H[,j]) + c
+    xij_hat <- 1 / (1 + exp(-WHc_ij))
+    
+    # Compute the gradient for the selected data point
+    error <- xij_true - xij_hat
+    dW <- -error * H[,j]
+    dH <- -error * W[i,]
+    dc <- -error
+    
+    # Update W, H, and c
+    W[i,] <- W[i,] - learning_rate * dW
+    H[,j] <- H[,j] - learning_rate * dH
+    c <- c - learning_rate * dc
+    
+    # Ensure non-negativity
+    W[W < 0] <- epsilon
+    H[H < 0] <- epsilon
+    
+  }
+  
+  # return
+  return(list(W = W, H = H, c = c))
+  
+}
+
+#' Initialization
+#' NNDSVD credit to Renaud Gaujoux for R code
+#' and C. Boutsidis and E. Gallopoulos for paper and original MATLAB code
+#' 
+#' @noRd
+#' 
+
+initial_values <- function(X, k, m, n, method = "nndsvd", densify = c("base", "average", "random")){
+  
+  # constant always random
+  c <- stats::runif(1) # Global constant approach
+  
+  # check densify argument, average by default
+  if (missing(densify)){
+    densify = "average"
+  }
+  
+  # random non-negative values
+  if (method == "random"){
+    
     W <- matrix(stats::runif(m * k), m, k)
     H <- matrix(stats::runif(k * n), k, n)
     
-  } else {
-    stop("Invalid initialization method specified")
   }
   
-  # Ensure non-negativity (hacky)
-  W[W < 0] <- 0
-  H[H < 0] <- 0
-  
-  # Initialize results list
-  result <- list()
-  
-  # Define appropriate divergence function
-  compute_divergence <- switch(divergence_type,
-                               kl = binary_KL_divergence,
-                               crossentropy = binary_crossentropy,
-                               stop("Invalid divergence_type specified")
-  )
-  
-  # Select appropriate update rule based on divergence choice
-  if (divergence_type == "kl") {
+  # SVD initialization
+  else if (method == "svd"){
     
-    update_factors <- update_factors_KL
+    # Perform SVD on X
+    s <- svd(X)
     
-  } else if (divergence_type == "crossentropy") {
+    # Use the first k singular values and vectors
+    U_k <- s$u[, 1:k]
+    S_k <- diag(sqrt(s$d[1:k]))
+    V_k <- s$v[, 1:k]
     
-    update_factors <- update_factors_crossentropy
+    # Initialize matrices W and H using absolute values
+    W <- abs(U_k %*% S_k)
+    H <- abs(t(V_k))
     
   }
   
-  # Compute updates 
-  updates <- update_factors(V, W, H, max.iter, tol, learning_rate)
-  
-  W = updates$W
-  H = updates$H
-  
-  # record results
-  result$W <- W
-  result$H <- H
-  result$final_divergence <- updates$divergence
-  
-  # Compute marginal divergences if requested
-  if (compute_marginal_divergences) {
+  # Nonnegative Double Singular Value Decomposition
+  else if (method == "nndsvd"){
     
-    divergence_reductions <- numeric(k)
+    # Perform SVD on X
+    s <- svd(X)
+    U <- s$u
+    S <- s$d
+    V <- s$v
     
-    for (dim in 1:k) {
+    # Initialize matrices W and H
+    W <- matrix(0, m, k)
+    H <- matrix(0, k, n)
+    
+    # Handle the first singular triplet, must be nonnegative
+    W[,1] = sqrt(S[1]) * abs(U[,1])    
+    H[1,] = sqrt(S[1]) * abs(t(V[,1])) 
+    
+    # second SVD for the other k
+    for (i in seq(2, k)){
       
-      prev_divergence = compute_divergence(V, W %*% H)
+      uu = U[,i]
+      vv = V[,i]
       
-      updates <- update_factors(V, W, H, max.iter, tol, learning_rate)
+      uup = pmax(uu, 0)
+      uun = pmax(-uu, 0)
       
-      divergence_reductions[dim] <- prev_divergence - updates$divergence
+      vvp = pmax(vv, 0)
+      vvn = pmax(-vv, 0)
+  
+      n_uup = sqrt(drop(crossprod(uup)))
+      n_vvp = sqrt(drop(crossprod(vvp)))
+      n_uun = sqrt(drop(crossprod(uun)))
+      n_vvn = sqrt(drop(crossprod(vvn)))
+      
+      termp = n_uup * n_vvp
+      termn = n_uun * n_vvn
+      
+      if (termp >= termn){
+        
+        W[,i] = sqrt(S[i] * termp) * uup / n_uup 
+        H[i,] = sqrt(S[i] * termp) * vvp / n_vvp
+        
+      } else{		
+        
+        W[,i] = sqrt(S[i] * termn) * uun / n_uun
+        
+        H[i,] = sqrt(S[i] * termn) * vvn / n_vvn
+        
+      }
+    }
+    
+    # average variant of NNDSVD
+    if (densify == "average"){
+      
+      average <- mean(X)
+      
+      W[W == 0] <- average
+      H[H == 0] <- average
       
     }
     
-    result$divergence_reductions <- divergence_reductions
+    # random fill variant of NNDVSD
+    else if (densify == "random"){
+      
+      n1 <- sum(W == 0)
+      n2 <- sum(H == 0)
+      
+      average <- mean(X)
+      
+      W[W == 0] <- average * stats::runif(n1, min = 0, max = 1) / 100
+      H[H == 0] <- average * stats::runif(n2, min = 0, max = 1) / 100
+      
+    }
     
   }
-  
   
   # return
-  return(result)
-  
-}
-
-#' Sigmoid function
-#' 
-#' @noRd
-#' 
-
-sigmoid <- function(X) {
-  
-  1 / (1 + exp(-X))
-  
-}
-
-#' KL divergence for binary matrices
-#' 
-#' @noRd
-#' 
-
-binary_KL_divergence <- function(V, V_approx) {
-  
-  # to avoid division by zero
-  epsilon <- 1e-10
-  
-  # apply sigmoid
-  flat_V = as.numeric(V)
-  flat_V_approx = as.numeric(sigmoid(V_approx + epsilon))
-  
-  # clips inputs - probably terrible
-  #flat_V = pmin(1 - epsilon, pmax(V, epsilon))
-  #flat_V_approx = pmin(1 - epsilon, pmax(V_approx, epsilon))
-  
-  # KL divergence
-  divergence <- sum((flat_V + epsilon) * log(flat_V / flat_V_approx + epsilon) + 
-                      (1 - flat_V + epsilon) * log((1 - flat_V + epsilon) / (1 - flat_V_approx))
-                    )
-  
-  return(divergence)
-  
-}
-
-#' Binary cross-entropy loss
-#' 
-#' @noRd
-#' 
-
-binary_crossentropy <- function(V, V_approx) {
-  
-  # to avoid division by zero
-  epsilon <- 1e-10
-  
-  # apply sigmoid
-  flat_V = as.numeric(V)
-  flat_V_approx = as.numeric(sigmoid(V_approx + epsilon))
-  
-  # result
-  out <- -sum((flat_V + epsilon) * log(flat_V_approx) + (1 - flat_V + epsilon) * log(1 - flat_V_approx))
-  
-  return(out)
-  
-}
-
-#' Gradient for binary cross-entropy
-#' 
-#' @noRd
-#' 
-
-binary_crossentropy_gradient <- function(V, W, H) {
-  
-  # apply sigmoid
-  V_approx = sigmoid(W %*% H)
-  
-  dV = V_approx - V
-  dW = dV %*% t(H)
-  dH = t(W) %*% dV
-  
-  return(list(dW = dW, dH = dH))
-  
-}
-
-#' Update factors using KL divergence
-#' 
-#' @noRd
-#' 
-
-update_factors_KL <- function(V, W, H, max.iter, tol, ...) {
-  
-  # constant to avoid division by zero
-  epsilon <- 1e-10
-  
-  # populate divergence
-  prev_divergence <- binary_KL_divergence(V, W %*% H)
-  
-  # matrix of 1s with V dimensions
-  one_matrix <- matrix(rep(1, nrow(V)), nrow=nrow(V), ncol=ncol(V))
-  
-  for(iter in 1:max.iter) {
-    
-    # Compute the current approximation of V
-    V_approx <- W %*% H + epsilon
-    
-    # update W
-    W <- W * (((V/V_approx) %*% t(H)) / (one_matrix %*% t(H)))
-    
-    # update H
-    H <- H * ((t(W) %*% (V/V_approx)) / (t(W) %*% one_matrix))
-    
-    # update divergence
-    divergence <- binary_KL_divergence(V, W %*% H)
-    
-    # tolerance check
-    if(abs(divergence - prev_divergence) < tol) {
-      
-      break
-      
-    }
-    
-    prev_divergence <- divergence
-    
-  }
-  
-  return(list(W = W, H = H, divergence = divergence))
-  
-}
-
-#' Update factors using binary cross-entropy with gradient descent
-#' 
-#' @noRd
-#' 
-
-update_factors_crossentropy <- function(V, W, H, max.iter, tol, learning_rate) {
-  
-  prev_loss <- binary_crossentropy(V, W %*% H)
-  
-  for(iter in 1:max.iter) {
-    
-    gradients = binary_crossentropy_gradient(V, W, H)
-    dW = gradients$dW
-    dH = gradients$dH
-    
-    W = W - learning_rate * dW
-    H = H - learning_rate * dH
-    
-    # Ensure non-negativity
-    W[W < 0] <- 0
-    H[H < 0] <- 0
-    
-    loss = binary_crossentropy(V, W %*% H)
-    
-    if(abs(loss - prev_loss) < tol) {
-      break
-    }
-    prev_loss <- loss
-  }
-  
-  return(list(W = W, H = H, divergence = prev_loss))
+  return(list(W = W, H = H, c = c))
   
 }

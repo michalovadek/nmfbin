@@ -6,7 +6,7 @@ Authors@R: c(person(given = "Michal",
              role = c("aut", "cre", "cph"),
              email = "michal.ovadek@gmail.com",
              comment = c(ORCID = "0000-0002-2552-2580")))
-Description: What the package does (one paragraph).
+Description: Factorize binary matrices into rank-k components.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Language: en-GB

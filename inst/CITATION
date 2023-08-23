@@ -1,0 +1,11 @@
+bibentry(
+  bibtype = "Manual",
+  title = "nmfbin: Non-negative Matrix Factorization for Binary Data",
+  author = person(given = "Michal",
+                  family = "Ovadek",
+                  email = "michal.ovadek@gmail.com"),
+  year = "2023",
+  note = "R package version 0.2.0",
+  url = "https://michalovadek.github.io/nmfbin/",
+  header = "To cite nmfbin in publications use:"
+)

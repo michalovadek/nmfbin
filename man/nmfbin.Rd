@@ -2,53 +2,69 @@
 % Please edit documentation in R/nmfbin.R
 \name{nmfbin}
 \alias{nmfbin}
-\title{Non-negative Matrix Factorization for Binary Data}
+\title{Logistic Non-negative Matrix Factorization}
 \usage{
 nmfbin(
-  V,
+  X,
   k,
-  divergence_type = "kl",
-  init_method = "random",
-  max.iter = 100,
-  tol = 1e-05,
-  learning_rate = 0.01,
-  compute_marginal_divergences = FALSE
+  optimizer = "mur",
+  init = "nndsvd",
+  max_iter = 1000,
+  tol = 1e-06,
+  learning_rate = 0.001,
+  verbose = FALSE,
+  loss_fun = "logloss",
+  loss_normalize = TRUE,
+  epsilon = 1e-10
 )
 }
 \arguments{
-\item{V}{A binary matrix (with entries 0 or 1) to factorize.}
+\item{X}{A binary matrix (m x n) to be factorized.}
 
-\item{k}{Number of components.}
+\item{k}{The number of factors or components.}
 
-\item{divergence_type}{Method for divergence calculation. Choices are "kl" for Kullback-Leibler divergence and "crossentropy" for binary cross-entropy.}
+\item{optimizer}{Type of updating algorithm. \code{update} for NMF multiplicative update rules or \code{gradient} for gradient descent.}
 
-\item{init_method}{Method for matrix factor initialization. Choices are "svd" for Singular Value Decomposition and "random" for random values.}
+\item{init}{Method for initializing the factorization.}
 
-\item{max.iter}{Maximum number of iterations for the factor update algorithm.}
+\item{max_iter}{Maximum number of iterations for the gradient descent optimization.}
 
-\item{tol}{Tolerance for convergence in the factor update algorithm.}
+\item{tol}{Convergence tolerance. The optimization stops when the change in loss is less than this value.}
 
-\item{learning_rate}{Learning rate for gradient descent (only used with divergence_type = "crossentropy").}
+\item{learning_rate}{Learning rate (step size) for the gradient descent optimization.}
 
-\item{compute_marginal_divergences}{Logical indicating whether to compute the marginal divergences.}
+\item{verbose}{Print convergence if \code{TRUE}.}
+
+\item{loss_fun}{Choice of loss function.}
+
+\item{loss_normalize}{Normalize loss if \code{TRUE}.}
+
+\item{epsilon}{Constant to avoid log(0).}
 }
 \value{
-A list containing the factor matrices W and H, the final divergence, and if compute_marginal_divergences=TRUE, a vector of marginal divergences.
+A list containing:
+\itemize{
+\item \code{W}: The basis matrix (m x k).
+\item \code{H}: The coefficient matrix (k x n).
+\item \code{c}: The global threshold.
+}
 }
 \description{
-Non-negative Matrix Factorization for Binary Data
+This function performs Logistic Non-negative Matrix Factorization (NMF) on a binary matrix.
 }
 \examples{
-# Create a small binary matrix
-V <- matrix(c(1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1), nrow = 3)
+\dontrun{
+# Generate a binary matrix of size 100 x 50
+set.seed(123)
+m <- 100
+n <- 50
+X <- matrix(sample(c(0, 1), m * n, replace = TRUE), m, n)
 
-# Perform binary NMF with 2 components using KL divergence and random initialization
-result <- nmfbin(V, k = 2, divergence_type = "kl", init_method = "random")
+# Set the number of factors
+k <- 4
 
-# Print factor matrices
-print(result$W)
-print(result$H)
+# Apply the function
+result <- nmfbin(X, k)
+}
 
-# Check the final divergence
-print(result$final_divergence)
 }
