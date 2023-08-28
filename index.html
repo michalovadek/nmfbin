@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="index.html">nmfbin</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -65,8 +65,10 @@
 <!-- badges: start -->
 
 <p>The <code>nmfbin</code> R package provides a simple Non-Negative Matrix Factorization (NMF) implementation tailored for binary data matrices. It offers a choice of initialization methods, loss functions and updating algorithms.</p>
-<p>Unlike most other NMF packages, this one is focused on (1) binary (Boolean) data and (2) minimizing dependencies.</p>
-<p>Note the package is in early stages of development.</p>
+<p>NMF is typically used for reducing high-dimensional matrices into lower (k-) rank ones where <em>k</em> is chosen by the user. Given a non-negative matrix <em>X</em> of size <span class="math inline"><em>m</em> × <em>n</em></span>, NMF looks for two non-negative matrices <em>W</em> (<span class="math inline"><em>m</em> × <em>k</em></span>) and <em>H</em> (<span class="math inline"><em>k</em> × <em>n</em></span>), such that:</p>
+<p><span class="math display"><em>X</em> ≈ <em>W</em> × <em>H</em></span></p>
+<p>In topic modelling, <em>W</em> is interpreted as the document-topic matrix and <em>H</em> as the topic-feature matrix.</p>
+<p>Unlike most other NMF packages, <code>nmfbin</code> is focused on binary (Boolean) data, while keeping the number of dependencies to a minimum.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -84,10 +86,10 @@
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://michalovadek.github.io/nmfbin/">nmfbin</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Create a binary matrix for demonstration</span></span>
-<span><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>, <span class="fl">100</span>, replace<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>, ncol<span class="op">=</span><span class="fl">10</span><span class="op">)</span></span>
+<span><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>, <span class="fl">100</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Perform NMF</span></span>
-<span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/nmfbin.html">nmfbin</a></span><span class="op">(</span><span class="va">X</span>, k<span class="op">=</span><span class="fl">3</span>, optimizer <span class="op">=</span> <span class="st">"mur"</span>, init <span class="op">=</span> <span class="st">"nndsvd"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="co"># Perform Logistic NMF</span></span>
+<span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/nmfbin.html">nmfbin</a></span><span class="op">(</span><span class="va">X</span>, k <span class="op">=</span> <span class="fl">3</span>, optimizer <span class="op">=</span> <span class="st">"mur"</span>, init <span class="op">=</span> <span class="st">"nndsvd"</span>, max_iter <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
@@ -96,7 +98,7 @@
   title = {nmfbin: Non-negative Matrix Factorization for Binary Data},
   author = {Michal Ovadek},
   year = {2023},
-  note = {R package version 0.2.0},
+  note = {R package version 0.2.1},
   url = {https://michalovadek.github.io/nmfbin/},
 }</code></pre>
 </div>

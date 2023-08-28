@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">nmfbin</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -73,19 +73,19 @@
 
 
 <dt>k</dt>
-<dd><p>The number of factors or components.</p></dd>
+<dd><p>The number of factors (components, topics).</p></dd>
 
 
 <dt>optimizer</dt>
-<dd><p>Type of updating algorithm. <code>update</code> for NMF multiplicative update rules or <code>gradient</code> for gradient descent.</p></dd>
+<dd><p>Type of updating algorithm. <code>mur</code> for NMF multiplicative update rules, <code>gradient</code> for gradient descent, <code>sgd</code> for stochastic gradient descent.</p></dd>
 
 
 <dt>init</dt>
-<dd><p>Method for initializing the factorization.</p></dd>
+<dd><p>Method for initializing the factorization. By default Nonnegative Double Singular Value Decomposition with average densification.</p></dd>
 
 
 <dt>max_iter</dt>
-<dd><p>Maximum number of iterations for the gradient descent optimization.</p></dd>
+<dd><p>Maximum number of iterations for optimization.</p></dd>
 
 
 <dt>tol</dt>
@@ -101,11 +101,11 @@
 
 
 <dt>loss_fun</dt>
-<dd><p>Choice of loss function.</p></dd>
+<dd><p>Choice of loss function: <code>logloss</code> (negative log-likelihood, also known as binary cross-entropy) or <code>mse</code> (mean squared error).</p></dd>
 
 
 <dt>loss_normalize</dt>
-<dd><p>Normalize loss if <code>TRUE</code>.</p></dd>
+<dd><p>Normalize loss by matrix dimensions if <code>TRUE</code>.</p></dd>
 
 
 <dt>epsilon</dt>
@@ -116,29 +116,13 @@
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>A list containing:</p><ul><li><p><code>W</code>: The basis matrix (m x k).</p></li>
-<li><p><code>H</code>: The coefficient matrix (k x n).</p></li>
+<p>A list containing:</p><ul><li><p><code>W</code>: The basis matrix (m x k). The document-topic matrix in topic modelling.</p></li>
+<li><p><code>H</code>: The coefficient matrix (k x n). Contribution of features to factors (topics).</p></li>
 <li><p><code>c</code>: The global threshold.</p></li>
+<li><p><code>convergence</code>: Divergence (loss) from <code>X</code> at every <code>iter</code> until <code>tol</code> or <code>max_iter</code> is reached.</p></li>
+<li><p><code>final_loss</code>: The final loss before <code>tol</code> or <code>max_iter</code> was reached.</p></li>
 </ul></div>
 
-    <div class="section level2">
-    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
-<span class="r-in"><span><span class="co"># Generate a binary matrix of size 100 x 50</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fl">100</span></span></span>
-<span class="r-in"><span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">50</span></span></span>
-<span class="r-in"><span><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>, <span class="va">m</span> <span class="op">*</span> <span class="va">n</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, <span class="va">m</span>, <span class="va">n</span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Set the number of factors</span></span></span>
-<span class="r-in"><span><span class="va">k</span> <span class="op">&lt;-</span> <span class="fl">4</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Apply the function</span></span></span>
-<span class="r-in"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">nmfbin</span><span class="op">(</span><span class="va">X</span>, <span class="va">k</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span></span></span>
-<span class="r-in"><span></span></span>
-</code></pre></div>
-    </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>
 

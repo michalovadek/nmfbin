@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">nmfbin</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -73,21 +73,26 @@
 
     
     
-<p>The main function <code><a href="../reference/nmfbin.html">nmfbin()</a></code> operates on matrices like
-so:</p>
+<p>The main function <code><a href="../reference/nmfbin.html">nmfbin()</a></code> operates on binary matrices
+like so:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://michalovadek.github.io/nmfbin/">nmfbin</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Create a binary matrix for demonstration</span></span>
-<span><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>, <span class="fl">100</span>, replace<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>, ncol<span class="op">=</span><span class="fl">10</span><span class="op">)</span></span>
+<span><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>, <span class="fl">100</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Perform NMF</span></span>
-<span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmfbin.html">nmfbin</a></span><span class="op">(</span><span class="va">X</span>, k<span class="op">=</span><span class="fl">3</span>, optimizer <span class="op">=</span> <span class="st">"mur"</span>, init <span class="op">=</span> <span class="st">"nndsvd"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/nmfbin.html">nmfbin</a></span><span class="op">(</span><span class="va">X</span>, k <span class="op">=</span> <span class="fl">3</span>, optimizer <span class="op">=</span> <span class="st">"mur"</span>, init <span class="op">=</span> <span class="st">"nndsvd"</span>, loss_fun <span class="op">=</span> <span class="st">"logloss"</span>, max_iter <span class="op">=</span> <span class="fl">500</span><span class="op">)</span></span></code></pre></div>
 <p>The results include the final loss:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">results</span><span class="op">$</span><span class="va">final_loss</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.4402867</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">results</span><span class="op">$</span><span class="va">final_loss</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 0.4570503</span></span></code></pre></div>
+<p>We can also easily plot the optimization process.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">results</span><span class="op">$</span><span class="va">convergence</span>,</span>
+<span>     xlab <span class="op">=</span> <span class="st">"Iteration"</span>,</span>
+<span>     ylab <span class="op">=</span> <span class="st">"Negative log-likelihood loss"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="introduction_files/figure-html/convergence-1.png" width="700"></p>
   </main>
 </div>
 
