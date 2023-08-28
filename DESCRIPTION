@@ -1,6 +1,6 @@
 Package: nmfbin
 Title: Non-negative Matrix Factorization for Binary Data
-Version: 0.1.0
+Version: 0.2.1
 Authors@R: c(person(given = "Michal",
              family = "Ovadek",
              role = c("aut", "cre", "cph"),

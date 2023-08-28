@@ -3,22 +3,24 @@
 #' This function performs Logistic Non-negative Matrix Factorization (NMF) on a binary matrix.
 #'
 #' @param X A binary matrix (m x n) to be factorized.
-#' @param k The number of factors or components.
-#' @param optimizer Type of updating algorithm. `update` for NMF multiplicative update rules or `gradient` for gradient descent.
-#' @param init Method for initializing the factorization.
-#' @param max_iter Maximum number of iterations for the gradient descent optimization.
+#' @param k The number of factors (components, topics).
+#' @param optimizer Type of updating algorithm. `mur` for NMF multiplicative update rules, `gradient` for gradient descent, `sgd` for stochastic gradient descent.
+#' @param init Method for initializing the factorization. By default Nonnegative Double Singular Value Decomposition with average densification.
+#' @param max_iter Maximum number of iterations for optimization.
 #' @param tol Convergence tolerance. The optimization stops when the change in loss is less than this value.
 #' @param learning_rate Learning rate (step size) for the gradient descent optimization.
 #' @param verbose Print convergence if `TRUE`.
-#' @param loss_fun Choice of loss function.
-#' @param loss_normalize Normalize loss if `TRUE`.
+#' @param loss_fun Choice of loss function: `logloss` (negative log-likelihood, also known as binary cross-entropy) or `mse` (mean squared error).
+#' @param loss_normalize Normalize loss by matrix dimensions if `TRUE`.
 #' @param epsilon Constant to avoid log(0).
 #'
 #' @return A list containing:
 #' \itemize{
-#'   \item \code{W}: The basis matrix (m x k).
-#'   \item \code{H}: The coefficient matrix (k x n).
+#'   \item \code{W}: The basis matrix (m x k). The document-topic matrix in topic modelling.
+#'   \item \code{H}: The coefficient matrix (k x n). Contribution of features to factors (topics).
 #'   \item \code{c}: The global threshold.
+#'   \item \code{convergence}: Divergence (loss) from `X` at every `iter` until `tol` or `max_iter` is reached.
+#'   \item \code{final_loss}: The final loss before `tol` or `max_iter` was reached.
 #' }
 #'
 #' @examples
@@ -34,8 +36,6 @@
 #'
 #' # Apply the function
 #' result <- nmfbin(X, k)
-#' }
-#'
 #' @export
 
 nmfbin <- function(X, k, optimizer = "mur", init = "nndsvd", max_iter = 1000, tol = 1e-6, learning_rate = 0.001,

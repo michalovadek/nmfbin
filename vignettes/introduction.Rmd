@@ -14,22 +14,28 @@ knitr::opts_chunk$set(
 )
 ```
 
-The main function `nmfbin()` operates on matrices like so:
+The main function `nmfbin()` operates on binary matrices like so:
 
 ```{r setup}
 library(nmfbin)
 
 # Create a binary matrix for demonstration
-X <- matrix(sample(c(0, 1), 100, replace=TRUE), ncol=10)
+X <- matrix(sample(c(0, 1), 100, replace = TRUE), ncol = 10)
 
 # Perform NMF
-results <- nmfbin(X, k=3, optimizer = "mur", init = "nndsvd")
+results <- nmfbin(X, k = 3, optimizer = "mur", init = "nndsvd", loss_fun = "logloss", max_iter = 500)
 ```
 
 The results include the final loss:
 
-```{r measures}
-
+```{r finalloss}
 print(results$final_loss)
+```
 
+We can also easily plot the optimization process.
+
+```{r convergence}
+plot(results$convergence,
+     xlab = "Iteration",
+     ylab = "Negative log-likelihood loss")
 ```

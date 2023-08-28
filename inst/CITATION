@@ -5,7 +5,7 @@ bibentry(
                   family = "Ovadek",
                   email = "michal.ovadek@gmail.com"),
   year = "2023",
-  note = "R package version 0.2.0",
+  note = "R package version 0.2.1",
   url = "https://michalovadek.github.io/nmfbin/",
   header = "To cite nmfbin in publications use:"
 )

@@ -21,13 +21,13 @@ nmfbin(
 \arguments{
 \item{X}{A binary matrix (m x n) to be factorized.}
 
-\item{k}{The number of factors or components.}
+\item{k}{The number of factors (components, topics).}
 
-\item{optimizer}{Type of updating algorithm. \code{update} for NMF multiplicative update rules or \code{gradient} for gradient descent.}
+\item{optimizer}{Type of updating algorithm. \code{mur} for NMF multiplicative update rules, \code{gradient} for gradient descent, \code{sgd} for stochastic gradient descent.}
 
-\item{init}{Method for initializing the factorization.}
+\item{init}{Method for initializing the factorization. By default Nonnegative Double Singular Value Decomposition with average densification.}
 
-\item{max_iter}{Maximum number of iterations for the gradient descent optimization.}
+\item{max_iter}{Maximum number of iterations for optimization.}
 
 \item{tol}{Convergence tolerance. The optimization stops when the change in loss is less than this value.}
 
@@ -35,36 +35,22 @@ nmfbin(
 
 \item{verbose}{Print convergence if \code{TRUE}.}
 
-\item{loss_fun}{Choice of loss function.}
+\item{loss_fun}{Choice of loss function: \code{logloss} (negative log-likelihood, also known as binary cross-entropy) or \code{mse} (mean squared error).}
 
-\item{loss_normalize}{Normalize loss if \code{TRUE}.}
+\item{loss_normalize}{Normalize loss by matrix dimensions if \code{TRUE}.}
 
 \item{epsilon}{Constant to avoid log(0).}
 }
 \value{
 A list containing:
 \itemize{
-\item \code{W}: The basis matrix (m x k).
-\item \code{H}: The coefficient matrix (k x n).
+\item \code{W}: The basis matrix (m x k). The document-topic matrix in topic modelling.
+\item \code{H}: The coefficient matrix (k x n). Contribution of features to factors (topics).
 \item \code{c}: The global threshold.
+\item \code{convergence}: Divergence (loss) from \code{X} at every \code{iter} until \code{tol} or \code{max_iter} is reached.
+\item \code{final_loss}: The final loss before \code{tol} or \code{max_iter} was reached.
 }
 }
 \description{
 This function performs Logistic Non-negative Matrix Factorization (NMF) on a binary matrix.
-}
-\examples{
-\dontrun{
-# Generate a binary matrix of size 100 x 50
-set.seed(123)
-m <- 100
-n <- 50
-X <- matrix(sample(c(0, 1), m * n, replace = TRUE), m, n)
-
-# Set the number of factors
-k <- 4
-
-# Apply the function
-result <- nmfbin(X, k)
-}
-
 }
