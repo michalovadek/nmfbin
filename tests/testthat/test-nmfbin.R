@@ -18,15 +18,15 @@ mat_big <- matrix(sample(c(0,1), 100000, replace = TRUE), ncol = 10000)
 testthat::test_that(
   "small k, mur", {
     expect_gte(
-      nmfbin(mat_small, k = 2, optimizer = "mur", init = "random")$final_loss,
+      length(nmfbin(mat_small, k = 2, optimizer = "mur", init = "random")$convergence),
       0L
     )
     expect_gte(
-      nmfbin(mat_rect, k = 1, optimizer = "mur", init = "random")$final_loss,
+      length(nmfbin(mat_rect, k = 1, optimizer = "mur", init = "random")$convergence),
       0L
     )
     expect_gte(
-      nmfbin(mat_big, k = 3, optimizer = "mur", init = "random")$final_loss,
+      length(nmfbin(mat_big, k = 3, optimizer = "mur", init = "random")$convergence),
       0L
     )
   })
@@ -35,14 +35,14 @@ testthat::test_that(
 testthat::test_that(
   "slightly higher k, mur", {
     expect_error(
-      nmfbin(mat_small, k = 10, optimizer = "mur", init = "random")$final_loss
+      nmfbin(mat_small, k = 10, optimizer = "mur", init = "random")$convergence
     )
     expect_gte(
-      nmfbin(mat_rect, k = 11, optimizer = "mur", init = "random")$final_loss,
+      length(nmfbin(mat_rect, k = 11, optimizer = "mur", init = "random")$convergence),
       0L
     )
     expect_gte(
-      nmfbin(mat_big, k = 12, optimizer = "mur", init = "random")$final_loss,
+      length(nmfbin(mat_big, k = 12, optimizer = "mur", init = "random")$convergence),
       0L
     )
   })
@@ -51,14 +51,14 @@ testthat::test_that(
 testthat::test_that(
   "slightly higher k, mur", {
     expect_error(
-      nmfbin(mat_small, k = 51, optimizer = "mur", init = "random")$final_loss
+      nmfbin(mat_small, k = 51, optimizer = "mur", init = "random")$convergence
     )
     expect_gte(
-      nmfbin(mat_rect, k = 52, optimizer = "mur", init = "random")$final_loss,
+      length(nmfbin(mat_rect, k = 52, optimizer = "mur", init = "random")$convergence),
       0L
     )
     expect_gte(
-      nmfbin(mat_big, k = 53, optimizer = "mur", init = "random")$final_loss,
+      length(nmfbin(mat_big, k = 53, optimizer = "mur", init = "random")$convergence),
       0L
     )
   })

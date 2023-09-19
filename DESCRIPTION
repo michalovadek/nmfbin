@@ -6,7 +6,7 @@ Authors@R: c(person(given = "Michal",
              role = c("aut", "cre", "cph"),
              email = "michal.ovadek@gmail.com",
              comment = c(ORCID = "0000-0002-2552-2580")))
-Description: Factorize binary matrices into rank-k components.
+Description: Factorize binary matrices into rank-k components using simple but appropriate loss functions and optimization algorithms.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Language: en-GB

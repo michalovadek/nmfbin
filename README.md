@@ -1,12 +1,12 @@
 
-# nmfbin: Non-Negative Matrix Factorization for Binary Data
+# nmfbin: Non-negative Matrix Factorization for Binary Data
 
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/nmfbin)](https://CRAN.R-project.org/package=nmfbin)
 [![R-CMD-check](https://github.com/michalovadek/nmfbin/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/michalovadek/nmfbin/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-The `nmfbin` R package provides a simple Non-Negative Matrix Factorization (NMF) implementation tailored for binary data matrices. It offers a choice of initialization methods, loss functions and updating algorithms.
+The `nmfbin` R package provides a simple Non-negative Matrix Factorization (NMF) implementation tailored for binary data matrices. It offers a choice of initialization methods, loss functions and updating algorithms.
 
 NMF is typically used for reducing high-dimensional matrices into lower (k-) rank ones where _k_ is chosen by the user. Given a non-negative matrix _X_ of size $m \times n$, NMF looks for two non-negative matrices _W_ ($m \times k$) and _H_ ($k \times n$), such that:
 

@@ -22,17 +22,17 @@ library(nmfbin)
 # Create a binary matrix for demonstration
 X <- matrix(sample(c(0, 1), 100, replace = TRUE), ncol = 10)
 
-# Perform NMF
+# Perform Logistic NMF
 results <- nmfbin(X, k = 3, optimizer = "mur", init = "nndsvd", loss_fun = "logloss", max_iter = 500)
 ```
 
-The results include the final loss:
+We can retrieve the final loss value before convergence criteria were reached:
 
 ```{r finalloss}
-print(results$final_loss)
+print(results$convergence[length(results$convergence)])
 ```
 
-We can also easily plot the optimization process.
+We can also easily plot the optimization process at every iteration:
 
 ```{r convergence}
 plot(results$convergence,

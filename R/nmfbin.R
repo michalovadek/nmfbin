@@ -18,15 +18,13 @@
 #' \itemize{
 #'   \item \code{W}: The basis matrix (m x k). The document-topic matrix in topic modelling.
 #'   \item \code{H}: The coefficient matrix (k x n). Contribution of features to factors (topics).
-#'   \item \code{c}: The global threshold.
+#'   \item \code{c}: The global threshold. A constant.
 #'   \item \code{convergence}: Divergence (loss) from `X` at every `iter` until `tol` or `max_iter` is reached.
-#'   \item \code{final_loss}: The final loss before `tol` or `max_iter` was reached.
 #' }
 #'
 #' @examples
 #' \dontrun{
-#' # Generate a binary matrix of size 100 x 50
-#' set.seed(123)
+#' # Generate a binary matrix
 #' m <- 100
 #' n <- 50
 #' X <- matrix(sample(c(0, 1), m * n, replace = TRUE), m, n)
@@ -34,8 +32,9 @@
 #' # Set the number of factors
 #' k <- 4
 #'
-#' # Apply the function
+#' # Factorize the matrix with default settings
 #' result <- nmfbin(X, k)
+#' }
 #' @export
 
 nmfbin <- function(X, k, optimizer = "mur", init = "nndsvd", max_iter = 1000, tol = 1e-6, learning_rate = 0.001,
@@ -122,7 +121,7 @@ nmfbin <- function(X, k, optimizer = "mur", init = "nndsvd", max_iter = 1000, to
   }
   
   # return
-  return(list(W = updated$W, H = updated$H, c = updated$c, convergence = convergence, final_loss = loss))
+  return(list(W = updated$W, H = updated$H, c = updated$c, convergence = convergence))
   
 }
 

@@ -1,6 +1,7 @@
 # nmfbin 0.2.1
 
 * documentation improvements
+* removed `final_loss` because already in `convergence`
 
 # nmfbin 0.2.0
 

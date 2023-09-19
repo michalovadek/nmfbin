@@ -46,11 +46,24 @@ A list containing:
 \itemize{
 \item \code{W}: The basis matrix (m x k). The document-topic matrix in topic modelling.
 \item \code{H}: The coefficient matrix (k x n). Contribution of features to factors (topics).
-\item \code{c}: The global threshold.
+\item \code{c}: The global threshold. A constant.
 \item \code{convergence}: Divergence (loss) from \code{X} at every \code{iter} until \code{tol} or \code{max_iter} is reached.
-\item \code{final_loss}: The final loss before \code{tol} or \code{max_iter} was reached.
 }
 }
 \description{
 This function performs Logistic Non-negative Matrix Factorization (NMF) on a binary matrix.
+}
+\examples{
+\dontrun{
+# Generate a binary matrix
+m <- 100
+n <- 50
+X <- matrix(sample(c(0, 1), m * n, replace = TRUE), m, n)
+
+# Set the number of factors
+k <- 4
+
+# Factorize the matrix with default settings
+result <- nmfbin(X, k)
+}
 }
