@@ -118,11 +118,26 @@
 
 <p>A list containing:</p><ul><li><p><code>W</code>: The basis matrix (m x k). The document-topic matrix in topic modelling.</p></li>
 <li><p><code>H</code>: The coefficient matrix (k x n). Contribution of features to factors (topics).</p></li>
-<li><p><code>c</code>: The global threshold.</p></li>
+<li><p><code>c</code>: The global threshold. A constant.</p></li>
 <li><p><code>convergence</code>: Divergence (loss) from <code>X</code> at every <code>iter</code> until <code>tol</code> or <code>max_iter</code> is reached.</p></li>
-<li><p><code>final_loss</code>: The final loss before <code>tol</code> or <code>max_iter</code> was reached.</p></li>
 </ul></div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="co"># Generate a binary matrix</span></span></span>
+<span class="r-in"><span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fl">100</span></span></span>
+<span class="r-in"><span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">50</span></span></span>
+<span class="r-in"><span><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>, <span class="va">m</span> <span class="op">*</span> <span class="va">n</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, <span class="va">m</span>, <span class="va">n</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Set the number of factors</span></span></span>
+<span class="r-in"><span><span class="va">k</span> <span class="op">&lt;-</span> <span class="fl">4</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Factorize the matrix with default settings</span></span></span>
+<span class="r-in"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">nmfbin</span><span class="op">(</span><span class="va">X</span>, <span class="va">k</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>
 
