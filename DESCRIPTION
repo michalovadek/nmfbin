@@ -1,12 +1,12 @@
 Package: nmfbin
-Title: Non-negative Matrix Factorization for Binary Data
+Title: Non-Negative Matrix Factorization for Binary Data
 Version: 0.2.1
 Authors@R: c(person(given = "Michal",
              family = "Ovadek",
              role = c("aut", "cre", "cph"),
              email = "michal.ovadek@gmail.com",
              comment = c(ORCID = "0000-0002-2552-2580")))
-Description: Factorize binary matrices into rank-k components using simple but appropriate loss functions and optimization algorithms.
+Description: Factorize binary matrices into rank-k components using the logistic function in the updating process. See e.g. Tomé et al (2015) <doi:10.1007/s11045-013-0240-9> .
 License: MIT + file LICENSE
 Encoding: UTF-8
 Language: en-GB

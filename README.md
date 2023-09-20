@@ -1,12 +1,12 @@
 
-# nmfbin: Non-negative Matrix Factorization for Binary Data
+# nmfbin: Non-Negative Matrix Factorization for Binary Data
 
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/nmfbin)](https://CRAN.R-project.org/package=nmfbin)
 [![R-CMD-check](https://github.com/michalovadek/nmfbin/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/michalovadek/nmfbin/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-The `nmfbin` R package provides a simple Non-negative Matrix Factorization (NMF) implementation tailored for binary data matrices. It offers a choice of initialization methods, loss functions and updating algorithms.
+The `nmfbin` R package provides a simple Non-Negative Matrix Factorization (NMF) implementation tailored for binary data matrices. It offers a choice of initialization methods, loss functions and updating algorithms.
 
 NMF is typically used for reducing high-dimensional matrices into lower (k-) rank ones where _k_ is chosen by the user. Given a non-negative matrix _X_ of size $m \times n$, NMF looks for two non-negative matrices _W_ ($m \times k$) and _H_ ($k \times n$), such that:
 
@@ -14,7 +14,7 @@ $$X \approx W \times H$$
 
 In topic modelling, _W_ is interpreted as the document-topic matrix and _H_ as the topic-feature matrix.
 
-Unlike most other NMF packages, `nmfbin` is focused on binary (Boolean) data, while keeping the number of dependencies to a minimum.
+Unlike most other NMF packages, `nmfbin` is focused on binary (Boolean) data, while keeping the number of dependencies to a minimum. For more information see the [website](https://michalovadek.github.io/nmfbin/).
 
 ## Installation
 
@@ -44,7 +44,7 @@ results <- nmfbin(X, k = 3, optimizer = "mur", init = "nndsvd", max_iter = 1000)
 
 ```
 @Manual{,
-  title = {nmfbin: Non-negative Matrix Factorization for Binary Data},
+  title = {nmfbin: Non-Negative Matrix Factorization for Binary Data},
   author = {Michal Ovadek},
   year = {2023},
   note = {R package version 0.2.1},
