@@ -3,7 +3,7 @@ pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   introduction: introduction.html
-last_built: 2023-09-20T10:17Z
+last_built: 2024-01-26T23:27Z
 urls:
   reference: https://michalovadek.github.io/nmfbin/reference
   article: https://michalovadek.github.io/nmfbin/articles
