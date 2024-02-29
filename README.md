@@ -12,7 +12,7 @@ NMF is typically used for reducing high-dimensional matrices into lower (k-) ran
 
 $$X \approx W \times H$$
 
-In topic modelling, _W_ is normally interpreted as the word-topic matrix and _H_ as the topic-document matrix.
+In topic modelling, if _V_ is a word-document matrix then _W_ can be interpreted as the word-topic matrix and _H_ as the topic-document matrix.
 
 Unlike most other NMF packages, `nmfbin` is focused on binary (Boolean) data, while keeping the number of dependencies to a minimum. For more information see the [website](https://michalovadek.github.io/nmfbin/).
 
