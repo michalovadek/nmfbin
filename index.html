@@ -74,7 +74,7 @@
 <p>The <code>nmfbin</code> R package provides a simple Non-Negative Matrix Factorization (NMF) implementation tailored for binary data matrices. It offers a choice of initialization methods, loss functions and updating algorithms.</p>
 <p>NMF is typically used for reducing high-dimensional matrices into lower (k-) rank ones where <em>k</em> is chosen by the user. Given a non-negative matrix <em>X</em> of size <span class="math inline"><em>m</em> × <em>n</em></span>, NMF looks for two non-negative matrices <em>W</em> (<span class="math inline"><em>m</em> × <em>k</em></span>) and <em>H</em> (<span class="math inline"><em>k</em> × <em>n</em></span>), such that:</p>
 <p><span class="math display"><em>X</em> ≈ <em>W</em> × <em>H</em></span></p>
-<p>In topic modelling, <em>W</em> is normally interpreted as the word-topic matrix and <em>H</em> as the topic-document matrix.</p>
+<p>In topic modelling, if <em>V</em> is a word-document matrix then <em>W</em> can be interpreted as the word-topic matrix and <em>H</em> as the topic-document matrix.</p>
 <p>Unlike most other NMF packages, <code>nmfbin</code> is focused on binary (Boolean) data, while keeping the number of dependencies to a minimum. For more information see the <a href="https://michalovadek.github.io/nmfbin/">website</a>.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
