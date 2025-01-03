@@ -1,10 +1,9 @@
 pandoc: 3.1.11
-pkgdown: 2.0.7
+pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
   introduction: introduction.html
-last_built: 2024-02-29T00:03Z
+last_built: 2025-01-03T01:55Z
 urls:
   reference: https://michalovadek.github.io/nmfbin/reference
   article: https://michalovadek.github.io/nmfbin/articles
-

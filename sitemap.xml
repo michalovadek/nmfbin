@@ -1,33 +1,13 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://michalovadek.github.io/nmfbin/404.html</loc>
-  </url>
-  <url>
-    <loc>https://michalovadek.github.io/nmfbin/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>https://michalovadek.github.io/nmfbin/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>https://michalovadek.github.io/nmfbin/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>https://michalovadek.github.io/nmfbin/articles/introduction.html</loc>
-  </url>
-  <url>
-    <loc>https://michalovadek.github.io/nmfbin/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://michalovadek.github.io/nmfbin/index.html</loc>
-  </url>
-  <url>
-    <loc>https://michalovadek.github.io/nmfbin/news/index.html</loc>
-  </url>
-  <url>
-    <loc>https://michalovadek.github.io/nmfbin/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://michalovadek.github.io/nmfbin/reference/nmfbin.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://michalovadek.github.io/nmfbin/404.html</loc></url>
+<url><loc>https://michalovadek.github.io/nmfbin/LICENSE-text.html</loc></url>
+<url><loc>https://michalovadek.github.io/nmfbin/LICENSE.html</loc></url>
+<url><loc>https://michalovadek.github.io/nmfbin/articles/index.html</loc></url>
+<url><loc>https://michalovadek.github.io/nmfbin/articles/introduction.html</loc></url>
+<url><loc>https://michalovadek.github.io/nmfbin/authors.html</loc></url>
+<url><loc>https://michalovadek.github.io/nmfbin/index.html</loc></url>
+<url><loc>https://michalovadek.github.io/nmfbin/news/index.html</loc></url>
+<url><loc>https://michalovadek.github.io/nmfbin/reference/index.html</loc></url>
+<url><loc>https://michalovadek.github.io/nmfbin/reference/nmfbin.html</loc></url>
 </urlset>
+
