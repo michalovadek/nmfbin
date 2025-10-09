@@ -23,7 +23,6 @@
 #' }
 #'
 #' @examples
-#' \dontrun{
 #' # Generate a binary matrix
 #' m <- 100
 #' n <- 50
@@ -34,7 +33,6 @@
 #'
 #' # Factorize the matrix with default settings
 #' result <- nmfbin(X, k)
-#' }
 #' @export
 
 nmfbin <- function(X, k, optimizer = "mur", init = "nndsvd", max_iter = 1000, tol = 1e-6, learning_rate = 0.001,

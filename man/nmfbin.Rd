@@ -54,7 +54,6 @@ A list containing:
 This function performs Logistic Non-negative Matrix Factorization (NMF) on a binary matrix.
 }
 \examples{
-\dontrun{
 # Generate a binary matrix
 m <- 100
 n <- 50
@@ -65,5 +64,4 @@ k <- 4
 
 # Factorize the matrix with default settings
 result <- nmfbin(X, k)
-}
 }
